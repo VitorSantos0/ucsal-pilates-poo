@@ -1,4 +1,4 @@
-# Calendário Pilares
+# CALENDÁRIO PILARES
 
 Sistema demonstrando os pilares principais da Programação Orientada a Objetos
 
