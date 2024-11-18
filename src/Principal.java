@@ -85,7 +85,7 @@ public class Principal {
                         System.out.println("\nNenhum evento encontrado no calendário");
                     } else {
                         exibirCalendario();
-                        voltarMenu();
+                        encerrar = voltarMenu();
                     }
                     break;
                 case 5:
@@ -110,7 +110,7 @@ public class Principal {
                             System.err.print("\nData inválida, digite da forma correta: ");
                         }
                     } while(!dataValidacao);
-                    voltarMenu();
+                    encerrar = voltarMenu();
                     break;
                 default:
                     System.err.print("Escolha uma opção válida: ");
@@ -121,9 +121,9 @@ public class Principal {
     }
 
     private static void exibirMenu() {
-        System.out.println("\n══════════════════════════════════════════");
-        System.out.println("\t\t\tCALENDÁRIO PILARES");
-        System.out.println("══════════════════════════════════════════");
+        System.out.println("\n════════════════════════════════════════════════");
+        System.out.println("\t\tCALENDÁRIO PILARES");
+        System.out.println("════════════════════════════════════════════════");
         System.out.println("1. Cadastrar Usuário");
         System.out.println("2. Exibir Usuários");
         System.out.println("3. Cadastrar Evento");
@@ -199,12 +199,13 @@ public class Principal {
         }
     }
 
-    private static void voltarMenu() {
+    private static boolean voltarMenu() {
         boolean voltar;
         System.out.println();
         do {
             System.out.print("Voltar ao menu principal 1-sim | 0-não: ");
             voltar = scanner.nextInt() == 1;
+            return !voltar;
         } while(!voltar);
     }
 
