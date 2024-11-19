@@ -1,3 +1,4 @@
+package main;
 import agenda.Calendario;
 import agenda.Evento;
 import agenda.Reuniao;
@@ -38,6 +39,7 @@ public class Principal {
                     scanner.close();
                     break;
                 case 1:
+                	System.out.println("\nDigite 0 a qualquer momento para cancelar a operação");
                     cadastrarUsuario();
                     break;
                 case 2:
@@ -86,15 +88,22 @@ public class Principal {
                     } else {
                         exibirCalendario();
                         encerrar = voltarMenu();
+                        if(encerrar) {
+                        	System.out.println("\nEncerrando sistema...");
+                        }
                     }
                     break;
                 case 5:
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                     boolean dataValidacao = false;
                     List<Evento> eventosConsulta;
-                    System.out.print("\n\tInforme a data que deseja consultar (Exemplo: 30/11/2024): ");
+                    System.out.print("\n\tInforme a data que deseja consultar (Exemplo: 30/11/2024 ou 30/11): ");
                     do {
                         String dataConsulta = scanner.nextLine();
+                        if(dataConsulta.length() == 5) {
+                        	String anoAtual = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy"));
+                        	dataConsulta += "/"+anoAtual;
+                        }
                         try {
                             eventosConsulta = calendario.listarEventosPorData(LocalDate.parse(dataConsulta, formatter));
                             if(eventosConsulta.isEmpty()) {
@@ -111,6 +120,9 @@ public class Principal {
                         }
                     } while(!dataValidacao);
                     encerrar = voltarMenu();
+                    if(encerrar) {
+                    	System.out.println("\nEncerrando sistema...");
+                    }
                     break;
                 default:
                     System.err.print("Escolha uma opção válida: ");
@@ -133,24 +145,50 @@ public class Principal {
         System.out.print("Escolha uma opção: ");
     }
 
-    private static void cadastrarUsuario() {
-        System.out.print("\nDigite o nome do usuário: ");
-        usuario.setNome(scanner.nextLine());
+    private static int cadastrarUsuario() {
+    	String valor;
+        System.out.print("Digite o nome do usuário: ");
+        valor = scanner.nextLine();
+        if(valor.equals("0")) {
+        	return 0;
+        }
+        usuario.setNome(valor);
         System.out.print("Digite o email do usuário: ");
-        usuario.setEmail(scanner.nextLine());
+        valor = scanner.nextLine();
+        if(valor.equals("0")) {
+        	usuario.setNome(null);
+        	return 0;
+        	
+        }
+        usuario.setEmail(valor);
         System.out.print("Digite o telefone do usuário: ");
-        usuario.setTelefone(scanner.nextLine());
+        valor = scanner.nextLine();
+        if(valor.equals("0")) {
+        	usuario.setNome(null);
+        	usuario.setEmail(null);
+        	return 0;
+        }
+        usuario.setTelefone(valor);
         System.out.println("\nUsuário <"+usuario.getNome()+"> cadastrado com sucesso");
+		return 0;
     }
 
-    private static void cadastrarEvento(Evento evento) {
+    private static int cadastrarEvento(Evento evento) {
+    	String valor;
         System.out.print("\nInforme o título do evento: ");
-        evento.setTitulo(scanner.nextLine());
+        valor = scanner.nextLine();
+        if(valor.equals("0")) {
+        	return 0;
+        }
+        evento.setTitulo(valor);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         boolean dataValidacao = false;
         System.out.print("Informe a data do evento (Exemplo: 30/11/2024): ");
         do {
             String data = scanner.nextLine();
+            if(data.equals("0")) {
+            	return 0;
+            }
             try {
                 evento.setData(LocalDate.parse(data, formatter));
                 dataValidacao = true;
@@ -163,6 +201,9 @@ public class Principal {
         System.out.print("Informe a hora do evento (Exemplo: 13:30): ");
         do {
             String hora = scanner.nextLine();
+            if(hora.equals("0")) {
+            	return 0;
+            }
             try {
                 evento.setHora(LocalTime.parse(hora, formatter));
                 horaValidacao = true;
@@ -170,17 +211,26 @@ public class Principal {
                 System.err.print("\nHora inválida, digite da forma correta: ");
             }
         } while (!horaValidacao);
+        return 0;
     }
 
-    private static void cadastrarReuniao(Reuniao evento) {
+    private static int cadastrarReuniao(Reuniao evento) {
         cadastrarEvento(evento);
+        String valor;
         System.out.print("Descreva a modalidade da reuniao: ");
-        evento.setModalidade(scanner.nextLine());
+        valor = scanner.nextLine();
+        if(valor.equals("0")) {
+        	return 0;
+        }
+        evento.setModalidade(valor);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         boolean horaValidacao = false;
         System.out.print("Informe a duração da reunião em horas:minutos (Exemplo 01:30): ");
         do {
             String horaString = scanner.nextLine();
+            if(horaString.equals("0")) {
+            	return 0;
+            }
             try {
                 LocalTime hora = LocalTime.parse(horaString, formatter);
                 evento.setHoraDuracao(hora.getHour());
@@ -190,6 +240,7 @@ public class Principal {
                 System.err.print("\nHorário inválida, digite da forma correta: ");
             }
         } while (!horaValidacao);
+        return 0;
     }
 
     private static void exibirCalendario() {
